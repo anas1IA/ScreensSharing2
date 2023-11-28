@@ -5,12 +5,13 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+
 public class Server implements ServerInter {
 	
 	
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
 
 	}
 	

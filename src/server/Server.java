@@ -11,7 +11,7 @@ public class Server implements ServerInter {
 	
 
 	public static void main(String[] args) {
-		
+		System.out.println("Hello");
 
 	}
 	

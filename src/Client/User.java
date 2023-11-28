@@ -8,6 +8,7 @@ import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -34,12 +35,46 @@ public class User extends Socket implements UserInter {
 
 	@Override
 	public void SendScreenToServer() {
-		
+		boolean continueLoop= true;
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				 ObjectOutputStream oos =null;
+				   
+				   try {
+					   
+					oos = new ObjectOutputStream(getOutputStream());
+					oos.writeObject(screenRect);
+				
+				while(continueLoop){
+		                oos.writeObject(TakeScreenShot());
+		                
+		                oos.reset();
+		               
+		                
+		                Thread.sleep(100);
+			       }
+				   
+				   } catch (InterruptedException | IOException e) {
+						
+					    e.printStackTrace();
+				      }
+				   
+		        
+			
+			    }
+				
+			
+		}).start();
 	}
+	
+    	
+      
 
 	@Override
 	 public void drawImage(ImageIcon screenImage)  {
-        
+		screenImage = TakeScreenShot();
         Image image = screenImage.getImage();
         image = image.getScaledInstance(screenPanel.getWidth(),screenPanel.getHeight()
                                             ,Image.SCALE_SMOOTH);
@@ -48,10 +83,26 @@ public class User extends Socket implements UserInter {
         graphics.drawImage(image, 0, 0, screenPanel.getWidth(), screenPanel.getHeight(), screenPanel);
 	}
 
+	
+
 	@Override
 	public void ReceiveScreenFromServer() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+		
+			try {
+				while(true){
+				drawImage((ImageIcon) ois.readObject());
+				
+				}
+			} catch (ClassNotFoundException | IOException e) {e.printStackTrace();}
+			
+		}
 		
 		
-	}
+	}).start();
 
+	}
 }
